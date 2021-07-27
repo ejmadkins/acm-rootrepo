@@ -1,0 +1,25 @@
+apiVersion: configsync.gke.io/v1beta1
+kind: RepoSync
+metadata:
+  name: repo-sync
+  namespace: config-management-system
+spec:
+  git:
+    repo: https://github.com/ejmadkins/acm-rootrepo
+    branch: master
+    dir: "repo-sync"
+    auth: none
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: syncs-repo
+  namespace: tenant-a
+subjects:
+- kind: ServiceAccount
+  name: ns-reconciler-tenant-a
+  namespace: config-management-system
+roleRef:
+  kind: ClusterRole
+  name: edit
+  apiGroup: rbac.authorization.k8s.io
